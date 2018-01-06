@@ -7,11 +7,17 @@
     xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:local="clr-namespace:Othello"
     mc:Ignorable="d"
-    Title="Othello"
     WindowStartupLocation="CenterScreen"
     BorderBrush="{DynamicResource AccentBaseColorBrush}" BorderThickness="1"
 >
-    <Grid>
+    <controls:MetroWindow.LeftWindowCommands>
+        <controls:WindowCommands>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="test"></Label>
+            </StackPanel>
+        </controls:WindowCommands>
+     </controls:MetroWindow.LeftWindowCommands>
+        <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
@@ -22,9 +28,6 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="200"/>
         </Grid.ColumnDefinitions>
-        <Menu Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0">
-            <MenuItem Header="Menu"/>
-        </Menu>
         <local:GameBoard Grid.Row="1" Grid.Column="1"/>
     </Grid>
 </controls:MetroWindow>

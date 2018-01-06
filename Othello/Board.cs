@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Windows.Media;
 using Othello.Annotations;
 
 namespace Othello
@@ -11,7 +9,6 @@ namespace Othello
     public class Board : INotifyPropertyChanged
     {
         public static int SquareSize = 8;
-        private Brush backgroundColor;
 
         public Board()
         {
@@ -20,7 +17,6 @@ namespace Othello
 
         private void Initialize()
         {
-            BackgroundColor = new SolidColorBrush(Colors.DarkGreen);
             Pawns = new ObservableCollection<Pawn>();
             Reset();
         }
@@ -28,21 +24,21 @@ namespace Othello
         public void Reset()
         {
             Pawns.Clear();
-            for (int i = 0; i < SquareSize; i++)
+            CurrentColorPlayer = PawnColor.Black;
+            int size = SquareSize * SquareSize;
+            int indexMiddle = (size - 1 - SquareSize) / 2;
+            for (int i = 0; i < size; i++)
             {
-                for (int j = 0; j < SquareSize; j++)
+                var color = PawnColor.Empty;
+                if (i == indexMiddle || i == indexMiddle + (SquareSize + 1))
                 {
-                    var color = PawnColor.Empty;
-                    if (j == 3 && i == 3 || j == 4 && i == 4)
-                    {
-                        color = PawnColor.Black;
-                    }
-                    else if (j == 4 && i == 3 || j == 3 && i == 4)
-                    {
-                        color = PawnColor.White;
-                    }
-                    Pawns.Add(new Pawn(color, new PawnPosition { Row = j, Column = i }));
+                    color = PawnColor.Black;
                 }
+                else if (i == indexMiddle + 1 || i == indexMiddle + SquareSize)
+                {
+                    color = PawnColor.White;
+                }
+                Pawns.Add(new Pawn(color, i));
             }
             FindPlayable(PawnColor.Black);
         }
@@ -122,17 +118,7 @@ namespace Othello
             return false;
         }
 
-        public string ImageWhiteSource { get; set; }
-
-        public Brush BackgroundColor
-        {
-            get => backgroundColor;
-            set
-            {
-                backgroundColor = value;
-                OnPropertyChanged(nameof(BackgroundColor));
-            }
-        }
+        public PawnColor CurrentColorPlayer { get; set; }
 
         public ObservableCollection<Pawn> Pawns { get; set; }
 

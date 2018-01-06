@@ -74,7 +74,6 @@
     </Compile>
     <Compile Include="Pawn.cs" />
     <Compile Include="PawnColor.cs" />
-    <Compile Include="PawnPosition.cs" />
     <Compile Include="Players\AbstractPlayer.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -115,7 +114,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\background.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\black_pawn.png" />
     <Resource Include="Images\white_pawn.png" />

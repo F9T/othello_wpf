@@ -7,7 +7,21 @@
     xmlns:othello="clr-namespace:Othello"
     mc:Ignorable="d"
 >
-    <Grid Background="{Binding Board.BackgroundColor}" MouseMove="GameBoard_OnMouseMove">
+    <Grid>
+        <Grid.Style>
+            <Style TargetType="{x:Type Grid}">
+                <Setter Property="Background" Value="{Binding BackgroundColor}"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding UseBackgroundImage}" Value="true">
+                        <Setter Property="Background">
+                            <Setter.Value>
+                                <ImageBrush ImageSource="{Binding BackgroundImage}" Stretch="UniformToFill"/>
+                            </Setter.Value>    
+                        </Setter>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Style>
         <ItemsControl ItemsSource="{Binding Board.Pawns}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -16,7 +30,7 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Label BorderThickness="1" BorderBrush="Black" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                    <Label Tag="{Binding Number}"  BorderThickness="1" BorderBrush="Black" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MouseLeftButtonUp="CasePlayable_OnMouseLeftButtonUp">
                         <Label.Style>
                             <Style>
                                 <Style.Triggers>

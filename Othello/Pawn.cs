@@ -10,10 +10,10 @@ namespace Othello
         private string imageSource;
         private PawnColor color;
 
-        public Pawn(PawnColor _color, PawnPosition _position)
+        public Pawn(PawnColor _color, int _number)
         {
             Color = _color;
-            Position = _position;
+            Number = _number;
             IsPlayable = false;
         }
 
@@ -45,7 +45,7 @@ namespace Othello
             }
         }
 
-        public PawnPosition Position { get; set; }
+        public int Number { get; set; }
 
         public bool IsPlayable
         {
