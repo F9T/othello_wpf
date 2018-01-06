@@ -75,10 +75,12 @@ namespace Othello
             {
                 return false;
             }
+            bool globalIsPlayabble = false;
             for (int numberDirection = 0; numberDirection < 8; numberDirection++)
             {
                 bool findOtherColor = false;
                 int newIndex = _index + direction;
+                bool isPlayable = false;
                 while (true)
                 {
                     if (newIndex < 0)
@@ -98,13 +100,11 @@ namespace Othello
                     {
                         if (_turn)
                         {
-                            foreach (int i in turnPawn)
-                            {
-                                Pawns.ElementAt(i).Color = _color;
-                                Pawns.ElementAt(i).IsPlayable = false;
-                            }
+                            isPlayable = true;
+                            globalIsPlayabble = true;
                             break;
                         }
+                        //One direction is possible, useless check all direction (if not in turn mode)
                         return true;
                     }
                     if (findPawnColor == PawnColor.Empty)
@@ -119,15 +119,30 @@ namespace Othello
                             turnPawn.Add(newIndex);
                         }
                     }
+                    //Check if edges
                     if (newIndex % SquareSize == 0)
                     {
-                        break;
+                        if (((newIndex - direction) + 1) % SquareSize == 0)
+                        {
+                            break;
+                        }
                     }
                     if ((newIndex + 1) % SquareSize == 0)
                     {
-                        break;
+                        if ((newIndex - direction) % SquareSize == 0)
+                        {
+                            break;
+                        }
                     }
                     newIndex += direction;
+                }
+                if (isPlayable)
+                {
+                    foreach (int i in turnPawn)
+                    {
+                        Pawns.ElementAt(i).Color = _color;
+                        Pawns.ElementAt(i).IsPlayable = false;
+                    }
                 }
                 turnPawn.Clear();
                 direction++;
@@ -144,13 +159,16 @@ namespace Othello
                     direction = SquareSize - 1;
                 }
             }
-            return false;
+            return globalIsPlayabble;
         }
 
         public void Turn(int _index)
         {
-            IsPlayable(_index, CurrentPlayer.Color, true);
-            Pawns.ElementAt(_index).Color = CurrentPlayer.Color;
+            bool isPlayable = IsPlayable(_index, CurrentPlayer.Color, true);
+            if (isPlayable)
+            {
+                Pawns.ElementAt(_index).Color = CurrentPlayer.Color;
+            }
         }
 
         public void ChangePlayer()
