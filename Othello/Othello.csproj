@@ -74,7 +74,7 @@
     </Compile>
     <Compile Include="Pawn.cs" />
     <Compile Include="PawnColor.cs" />
-    <Compile Include="Players\AbstractPlayer.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -85,8 +85,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Players\PlayerBlack.cs" />
-    <Compile Include="Players\PlayerWhite.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

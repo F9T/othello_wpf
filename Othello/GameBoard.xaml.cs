@@ -74,7 +74,8 @@ namespace Othello
             if (_sender is Label label)
             {
                 int index = Convert.ToInt32(label.Tag);
-                Board.Pawns.ElementAt(index).Color = PawnColor.Black;
+                Board.Turn(index);
+                Board.ChangePlayer();
             }
         }
 
