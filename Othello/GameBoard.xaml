@@ -16,6 +16,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
         <TextBlock Grid.Column="1" Grid.Row="0" FontWeight="Bold" FontSize="24" Text="{Binding CurrentPlayer.Name, StringFormat='{}{0} player to play', TargetNullValue=''}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         <othello:PlayerUserControl Player="{Binding BlackPlayer}" Grid.Column="0" Grid.Row="1" />
