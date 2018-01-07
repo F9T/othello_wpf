@@ -60,6 +60,19 @@ namespace Othello
             return listIndex;
         }
 
+        public void UpdateScore(Player _player)
+        {
+            int score = 0;
+            foreach (var pawn in Pawns)
+            {
+                if (pawn.GetColor() == _player.Color)
+                {
+                    score++;
+                }
+            }
+            _player.ActualScore = score;
+        }
+
         public bool IsPlayable(int _index, Player _player, bool _turn = false)
         {
             //Start with diagonal on top left

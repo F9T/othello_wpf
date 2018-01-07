@@ -17,6 +17,7 @@ namespace Othello
         private string backgroundImage;
         private Brush backgroundColor;
         private bool useBackgroundImage;
+        private Player currentPlayer;
 
         public GameBoard()
         {
@@ -25,19 +26,25 @@ namespace Othello
             BackgroundColor = new SolidColorBrush(Colors.DarkGreen);
             UseBackgroundImage = false;
             BackgroundImage = "/Images/background.png";
-            BlackPlayer = new Player(PawnColor.Black, "Black player");
-            WhitePlayer = new Player(PawnColor.White, "White player");
+            BlackPlayer = new Player(PawnColor.Black, "Black");
+            WhitePlayer = new Player(PawnColor.White, "White");
             InitializeGame();
         }
 
         public void InitializeGame()
         {
+            Board = new Board();
+            Board.Reset(BlackPlayer, WhitePlayer);
+            StartGame();//Remove after
+        }
+
+        public void StartGame()
+        {
             BlackPlayer.Reset();
             WhitePlayer.Reset();
             CurrentPlayer = BlackPlayer;
-            Board = new Board();
-            Board.Reset(BlackPlayer, WhitePlayer);
             Board.GetLegalMove(CurrentPlayer);
+            UpdateScore();
         }
 
         public void ChangePlayer()
@@ -47,6 +54,12 @@ namespace Othello
             {
                 CurrentPlayer = CurrentPlayer == WhitePlayer ? BlackPlayer : WhitePlayer;
             }
+        }
+
+        private void UpdateScore()
+        {
+            Board.UpdateScore(BlackPlayer);
+            Board.UpdateScore(WhitePlayer);
         }
 
         public bool UseBackgroundImage
@@ -99,11 +112,20 @@ namespace Othello
                 {
                     Board.AddPawn(index, CurrentPlayer);
                     ChangePlayer();
+                    UpdateScore();
                 }
             }
         }
 
-        public Player CurrentPlayer { get; set; }
+        public Player CurrentPlayer
+        {
+            get => currentPlayer;
+            set
+            {
+                currentPlayer = value;
+                OnPropertyChanged(nameof(CurrentPlayer));
+            }
+        }
 
         public Player BlackPlayer { get; set; }
 

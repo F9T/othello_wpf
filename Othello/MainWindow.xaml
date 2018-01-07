@@ -17,13 +17,12 @@
             </StackPanel>
         </controls:WindowCommands>
      </controls:MetroWindow.LeftWindowCommands>
-        <Grid>
+    <Grid Background="#F5F5F5">
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
-        <local:GameBoard Grid.Row="1"/>
+        <local:GameBoard Grid.Row="0" />
     </Grid>
 </controls:MetroWindow>
 

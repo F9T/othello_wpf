@@ -10,6 +10,7 @@ namespace Othello
     {
         private string name, imageSource;
         private TimeSpan time;
+        private int actualScore;
 
         public Player(PawnColor _color, string _name)
         {
@@ -35,6 +36,17 @@ namespace Othello
         public void Reset()
         {
             Time = new TimeSpan(0, 0, 5, 0);
+            ActualScore = 0;
+        }
+
+        public int ActualScore
+        {
+            get => actualScore;
+            set
+            {
+                actualScore = value;
+                OnPropertyChanged(nameof(ActualScore));
+            }
         }
 
         public string Name
