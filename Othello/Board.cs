@@ -10,7 +10,6 @@ namespace Othello
     public class Board : INotifyPropertyChanged
     {
         public static int SquareSize = 8;
-        private Player whitePlayer, blackPlayer;
 
         public Board()
         {
@@ -20,40 +19,35 @@ namespace Othello
         private void Initialize()
         {
             Pawns = new ObservableCollection<Pawn>();
-            whitePlayer = new Player(PawnColor.White);
-            blackPlayer = new Player(PawnColor.Black);
-            Reset();
         }
 
-        public void Reset()
+        public void Reset(Player _blackPlayer, Player _whitePlayer)
         {
             Pawns.Clear();
-            CurrentPlayer = blackPlayer;
             int size = SquareSize * SquareSize;
             int indexMiddle = (size - 1 - SquareSize) / 2;
             for (int i = 0; i < size; i++)
             {
-                var color = PawnColor.Empty;
+                Player player = null;
                 if (i == indexMiddle || i == indexMiddle + (SquareSize + 1))
                 {
-                    color = PawnColor.Black;
+                    player = _blackPlayer;
                 }
                 else if (i == indexMiddle + 1 || i == indexMiddle + SquareSize)
                 {
-                    color = PawnColor.White;
+                    player = _whitePlayer;
                 }
-                Pawns.Add(new Pawn(color, i));
+                Pawns.Add(new Pawn(player, i));
             }
-            GetLegalMove(CurrentPlayer.Color);
         }
 
-        private List<int> GetLegalMove(PawnColor _color)
+        public List<int> GetLegalMove(Player _player)
         {
             var listIndex = new List<int>();
             for (int i = 0; i < Pawns.Count; i++)
             {
                 var pawn = Pawns.ElementAt(i);
-                if (IsPlayable(i, _color))
+                if (IsPlayable(i, _player))
                 {
                     pawn.IsPlayable = true;
                     listIndex.Add(i);
@@ -66,85 +60,25 @@ namespace Othello
             return listIndex;
         }
 
-        private bool IsPlayable(int _index, PawnColor _color, bool _turn = false)
+        public bool IsPlayable(int _index, Player _player, bool _turn = false)
         {
             //Start with diagonal on top left
-            int direction = -SquareSize - 1;
-            var turnPawn = new List<int>();
-            if (Pawns.ElementAt(_index).Color != PawnColor.Empty)
+            var direction = -SquareSize - 1;
+            if (Pawns.ElementAt(_index).GetColor() != PawnColor.Empty)
             {
                 return false;
             }
-            bool globalIsPlayabble = false;
+            bool globalIsPlayable = false;
             for (int numberDirection = 0; numberDirection < 8; numberDirection++)
             {
-                bool findOtherColor = false;
-                int newIndex = _index + direction;
-                bool isPlayable = false;
-                while (true)
+                if (CheckDirection(_index, direction, _player, _turn))
                 {
-                    if (newIndex < 0)
+                    globalIsPlayable = true;
+                    if (!_turn)
                     {
-                        break;
-                    }
-                    if (newIndex > (SquareSize * SquareSize) - 1)
-                    {
-                        break;
-                    }
-                    var findPawnColor = Pawns.ElementAt(newIndex).Color;
-                    if (findPawnColor == _color && !findOtherColor)
-                    {
-                        break;
-                    }
-                    if (findPawnColor == _color && findOtherColor)
-                    {
-                        if (_turn)
-                        {
-                            isPlayable = true;
-                            globalIsPlayabble = true;
-                            break;
-                        }
-                        //One direction is possible, useless check all direction (if not in turn mode)
                         return true;
                     }
-                    if (findPawnColor == PawnColor.Empty)
-                    {
-                        break;
-                    }
-                    if (findPawnColor != _color)
-                    {
-                        findOtherColor = true;
-                        if (_turn)
-                        {
-                            turnPawn.Add(newIndex);
-                        }
-                    }
-                    //Check if edges
-                    if (newIndex % SquareSize == 0)
-                    {
-                        if (((newIndex - direction) + 1) % SquareSize == 0)
-                        {
-                            break;
-                        }
-                    }
-                    if ((newIndex + 1) % SquareSize == 0)
-                    {
-                        if ((newIndex - direction) % SquareSize == 0)
-                        {
-                            break;
-                        }
-                    }
-                    newIndex += direction;
                 }
-                if (isPlayable)
-                {
-                    foreach (int i in turnPawn)
-                    {
-                        Pawns.ElementAt(i).Color = _color;
-                        Pawns.ElementAt(i).IsPlayable = false;
-                    }
-                }
-                turnPawn.Clear();
                 direction++;
                 if (numberDirection == 2)
                 {
@@ -159,28 +93,86 @@ namespace Othello
                     direction = SquareSize - 1;
                 }
             }
-            return globalIsPlayabble;
+            return globalIsPlayable;
         }
 
-        public void Turn(int _index)
+        private bool CheckDirection(int _index, int _direction, Player _player, bool _turn)
         {
-            bool isPlayable = IsPlayable(_index, CurrentPlayer.Color, true);
+            bool findOtherColor = false;
+            int newIndex = _index + _direction;
+            bool isPlayable = false;
+            var turnPawn = new List<int>();
+            var color = _player.Color;
+            while (true)
+            {
+                if (newIndex < 0)
+                {
+                    break;
+                }
+                if (newIndex > (SquareSize * SquareSize) - 1)
+                {
+                    break;
+                }
+                var findPawnColor = Pawns.ElementAt(newIndex).GetColor();
+                if (findPawnColor == color && !findOtherColor)
+                {
+                    break;
+                }
+                if (findPawnColor == color && findOtherColor)
+                {
+                    if (_turn)
+                    {
+                        isPlayable = true;
+                        break;
+                    }
+                    //One direction is possible, useless check all direction (if not in turn mode)
+                    return true;
+                }
+                if (findPawnColor == PawnColor.Empty)
+                {
+                    break;
+                }
+                if (findPawnColor != color)
+                {
+                    findOtherColor = true;
+                    if (_turn)
+                    {
+                        turnPawn.Add(newIndex);
+                    }
+                }
+                //Check if edges
+                if (newIndex % SquareSize == 0)
+                {
+                    if (((newIndex - _direction) + 1) % SquareSize == 0)
+                    {
+                        break;
+                    }
+                }
+                if ((newIndex + 1) % SquareSize == 0)
+                {
+                    if ((newIndex - _direction) % SquareSize == 0)
+                    {
+                        break;
+                    }
+                }
+                newIndex += _direction;
+            }
             if (isPlayable)
             {
-                Pawns.ElementAt(_index).Color = CurrentPlayer.Color;
+                foreach (int i in turnPawn)
+                {
+                    var pawn = Pawns.ElementAt(i);
+                    pawn.Owner = _player;
+                    pawn.IsPlayable = false;
+                }
             }
+            return isPlayable;
         }
 
-        public void ChangePlayer()
+        public void AddPawn(int _index, Player _player)
         {
-            CurrentPlayer = CurrentPlayer == whitePlayer ? blackPlayer : whitePlayer;
-            if (GetLegalMove(CurrentPlayer.Color).Count == 0)
-            {
-                CurrentPlayer = CurrentPlayer == whitePlayer ? blackPlayer : whitePlayer;
-            } 
+            Pawns.ElementAt(_index).Owner = _player;
         }
-
-        public Player CurrentPlayer { get; set; }
 
         public ObservableCollection<Pawn> Pawns { get; set; }
 

@@ -8,32 +8,49 @@
     mc:Ignorable="d"
 >
     <Grid>
-        <Grid.Style>
-            <Style TargetType="{x:Type Grid}">
-                <Setter Property="Background" Value="{Binding BackgroundColor}"/>
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding UseBackgroundImage}" Value="true">
-                        <Setter Property="Background">
-                            <Setter.Value>
-                                <ImageBrush ImageSource="{Binding BackgroundImage}" Stretch="UniformToFill"/>
-                            </Setter.Value>    
-                        </Setter>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-        </Grid.Style>
-        <ItemsControl ItemsSource="{Binding Board.Pawns}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="250"/>
+        </Grid.ColumnDefinitions>
+        <othello:PlayerUserControl Player="{Binding BlackPlayer}" Grid.Column="0" />
+        <othello:PlayerUserControl Player="{Binding WhitePlayer}" Grid.Column="2" />
+        <ItemsControl ItemsSource="{Binding Board.Pawns}" Grid.Column="1">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <UniformGrid Rows="8" Columns="8" MinWidth="300" MinHeight="300" />
+                    <UniformGrid Rows="8" Columns="8" MinWidth="300" MinHeight="300">
+                        <UniformGrid.Style>
+                            <Style TargetType="{x:Type UniformGrid}">
+                                <Setter Property="Background" Value="{Binding BackgroundColor}"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding UseBackgroundImage}" Value="true">
+                                        <Setter Property="Background">
+                                            <Setter.Value>
+                                                <ImageBrush ImageSource="{Binding BackgroundImage}" Stretch="UniformToFill"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </UniformGrid.Style>
+                    </UniformGrid>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Label Tag="{Binding Number}"  BorderThickness="1" BorderBrush="Black" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MouseLeftButtonUp="CasePlayable_OnMouseLeftButtonUp">
+                    <Label Tag="{Binding Number}" BorderThickness="1" BorderBrush="Black" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MouseLeftButtonUp="CasePlayable_OnMouseLeftButtonUp">
                         <Label.Style>
                             <Style>
                                 <Style.Triggers>
+                                    <!--<EventTrigger RoutedEvent="Label.MouseLeftButtonUp">
+                                        <BeginStoryboard>
+                                            <Storyboard BeginTime="00:00:00.000" Duration="00:00:1.000">
+                                                <DoubleAnimation
+                                                                 Storyboard.TargetProperty="Opacity" 
+                                                                 From="1" To="0" Duration="00:00:1.000" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>-->
                                     <MultiDataTrigger>
                                         <MultiDataTrigger.Conditions>
                                             <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsMouseOver}" Value="True"/>
@@ -44,7 +61,9 @@
                                 </Style.Triggers>
                             </Style>
                         </Label.Style>
-                        <Image Stretch="Uniform" StretchDirection="Both" Source="{Binding ImageSource}" />
+                        <Label.Content>
+                            <Image Stretch="Uniform" StretchDirection="Both" Source="{Binding Owner.ImageSource}" />
+                        </Label.Content>
                     </Label>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

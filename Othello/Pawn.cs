@@ -7,41 +7,22 @@ namespace Othello
     public class Pawn : INotifyPropertyChanged
     {
         private bool isPlayable;
-        private string imageSource;
-        private PawnColor color;
+        private Player owner;
 
-        public Pawn(PawnColor _color, int _number)
+        public Pawn(Player _owner, int _number)
         {
-            Color = _color;
+            Owner = _owner;
             Number = _number;
             IsPlayable = false;
         }
 
-        public string ImageSource
+        public Player Owner
         {
-            get => imageSource;
+            get => owner;
             set
             {
-                imageSource = value;
-                OnPropertyChanged(nameof(ImageSource));
-            }
-        }
-
-        public PawnColor Color
-        {
-            get => color;
-            set
-            {
-                color = value;
-                if (value == PawnColor.Black)
-                {
-                    ImageSource = "Images/black_pawn.png";
-                }
-                else if (value == PawnColor.White)
-                {
-                    ImageSource = "Images/white_pawn.png";
-                }
-                OnPropertyChanged(nameof(Color));
+                owner = value;
+                OnPropertyChanged(nameof(Owner));
             }
         }
 
@@ -55,6 +36,11 @@ namespace Othello
                 isPlayable = value;
                 OnPropertyChanged(nameof(IsPlayable));
             }
+        }
+
+        public PawnColor GetColor()
+        {
+            return Owner?.Color ?? PawnColor.Empty;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -23,12 +23,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="200"/>
-        </Grid.ColumnDefinitions>
-        <local:GameBoard Grid.Row="1" Grid.Column="1"/>
+        <local:GameBoard Grid.Row="1"/>
     </Grid>
 </controls:MetroWindow>
 

@@ -1,14 +1,30 @@
-﻿using System.IO;
+﻿using System;
+using System.ComponentModel;
+using System.IO;
+using System.Runtime.CompilerServices;
+using Othello.Annotations;
 
 namespace Othello
 {
-    public class Player
+    public class Player : INotifyPropertyChanged
     {
-        public Player(PawnColor _color)
+        private string name, imageSource;
+        private TimeSpan time;
+
+        public Player(PawnColor _color, string _name)
         {
+            Name = _name;
             if ((int)_color > -1)
             {
                 Color = _color;
+                if (Color == PawnColor.Black)
+                {
+                    ImageSource = "Images/black_pawn.png";
+                }
+                else if (Color == PawnColor.White)
+                {
+                    ImageSource = "Images/white_pawn.png";
+                }
             }
             else
             {
@@ -16,6 +32,49 @@ namespace Othello
             }
         }
 
+        public void Reset()
+        {
+            Time = new TimeSpan(0, 0, 5, 0);
+        }
+
+        public string Name
+        {
+            get => name;
+            set
+            {
+                name = value;
+                OnPropertyChanged(nameof(Name));
+            }
+        }
+        
+        public string ImageSource
+        {
+            get => imageSource;
+            set
+            {
+                imageSource = value;
+                OnPropertyChanged(nameof(ImageSource));
+            }
+        }
+
+        public TimeSpan Time
+        {
+            get => time;
+            set
+            {
+                time = value;
+                OnPropertyChanged(nameof(Time));
+            }
+        }
+
         public PawnColor Color { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string _propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(_propertyName));
+        }
     }
 }

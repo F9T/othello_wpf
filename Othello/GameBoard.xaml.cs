@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -26,7 +25,28 @@ namespace Othello
             BackgroundColor = new SolidColorBrush(Colors.DarkGreen);
             UseBackgroundImage = false;
             BackgroundImage = "/Images/background.png";
+            BlackPlayer = new Player(PawnColor.Black, "Black player");
+            WhitePlayer = new Player(PawnColor.White, "White player");
+            InitializeGame();
+        }
+
+        public void InitializeGame()
+        {
+            BlackPlayer.Reset();
+            WhitePlayer.Reset();
+            CurrentPlayer = BlackPlayer;
             Board = new Board();
+            Board.Reset(BlackPlayer, WhitePlayer);
+            Board.GetLegalMove(CurrentPlayer);
+        }
+
+        public void ChangePlayer()
+        {
+            CurrentPlayer = CurrentPlayer == WhitePlayer ? BlackPlayer : WhitePlayer;
+            if (Board.GetLegalMove(CurrentPlayer).Count == 0)
+            {
+                CurrentPlayer = CurrentPlayer == WhitePlayer ? BlackPlayer : WhitePlayer;
+            }
         }
 
         public bool UseBackgroundImage
@@ -74,10 +94,20 @@ namespace Othello
             if (_sender is Label label)
             {
                 int index = Convert.ToInt32(label.Tag);
-                Board.Turn(index);
-                Board.ChangePlayer();
+                bool isPlayable = Board.IsPlayable(index, CurrentPlayer, true);
+                if (isPlayable)
+                {
+                    Board.AddPawn(index, CurrentPlayer);
+                    ChangePlayer();
+                }
             }
         }
+
+        public Player CurrentPlayer { get; set; }
+
+        public Player BlackPlayer { get; set; }
+
+        public Player WhitePlayer { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
