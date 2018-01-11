@@ -10,8 +10,6 @@
     WindowStartupLocation="CenterScreen" Title="Othello"
     BorderBrush="{DynamicResource AccentBaseColorBrush}" BorderThickness="1"
 >
-    <controls:MetroWindow.Resources>
-    </controls:MetroWindow.Resources>
     <!--<local:GameBoard Grid.Row="0" />-->
     <Grid Background="#F5F5F5">
         <Grid.ColumnDefinitions>
@@ -19,6 +17,15 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <ListView ItemsSource="{Binding Views}" SelectedItem="{Binding SelectItemView}" Background="#FF444444" Padding="5" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Style.Resources>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black"/>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
+                    </Style.Resources>
+                    <Setter Property="Background" Value="Transparent"/>
+                </Style>
+            </ListView.ItemContainerStyle>
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Vertical" />

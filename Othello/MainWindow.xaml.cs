@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using MahApps.Metro.Controls;
 using Othello.Annotations;
@@ -21,6 +22,7 @@ namespace Othello
                 new ItemView("Images/game.png", new GameBoard()),
                 new ItemView("Images/settings.png", new SettingUsercontrol())
             };
+            SelectItemView = Views.ElementAt(0);
             DataContext = this;
         }
 

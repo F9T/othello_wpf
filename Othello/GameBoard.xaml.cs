@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Timers;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -11,31 +12,47 @@ namespace Othello
     /// <summary>
     /// Logique d'interaction pour GameBoard.xaml
     /// </summary>
-    public partial class GameBoard : INotifyPropertyChanged
+    public partial class GameBoard : INotifyPropertyChanged, IDisposable
     {
         private Board board;
-        private string backgroundImage;
         private Brush backgroundColor;
-        private bool useBackgroundImage;
         private Player currentPlayer;
+        private readonly Timer timer;
+        private string backgroundImage;
+        private bool useBackgroundImage, isStarted;
 
         public GameBoard()
         {
             InitializeComponent();
             DataContext = this;
-            BackgroundColor = new SolidColorBrush(Colors.DarkGreen);
+            BackgroundColor = new SolidColorBrush(Colors.MediumSeaGreen);
             UseBackgroundImage = false;
             BackgroundImage = "/Images/background.png";
             BlackPlayer = new Player(PawnColor.Black, "Black");
             WhitePlayer = new Player(PawnColor.White, "White");
+            timer = new Timer(1000);
+            timer.Elapsed += TimerTick;
             InitializeGame();
         }
 
         public void InitializeGame()
         {
+            IsStarted = false;
             Board = new Board();
             Board.Reset(BlackPlayer, WhitePlayer);
-            StartGame();//Remove after
+            /**
+             * 
+             * remove after
+             */
+            StartGame();
+        }
+
+        private void TimerTick(object _sender, ElapsedEventArgs _elapsedEventArgs)
+        {
+            if (IsStarted)
+            {
+                CurrentPlayer.Time -= new TimeSpan(0, 0, 0, 1);
+            }
         }
 
         public void StartGame()
@@ -45,6 +62,14 @@ namespace Othello
             CurrentPlayer = BlackPlayer;
             Board.GetLegalMove(CurrentPlayer);
             UpdateScore();
+            IsStarted = true;
+            timer.Start();
+        }
+
+        public void EndGame()
+        {
+            timer.Elapsed -= TimerTick;
+            timer?.Dispose();
         }
 
         public void ChangePlayer()
@@ -79,6 +104,16 @@ namespace Othello
             {
                 backgroundImage = value;
                 OnPropertyChanged(nameof(BackgroundImage));
+            }
+        }
+
+        public bool IsStarted
+        {
+            get => isStarted;
+            set
+            {
+                isStarted = value;
+                OnPropertyChanged(nameof(IsStarted));
             }
         }
 
@@ -130,6 +165,14 @@ namespace Othello
         public Player BlackPlayer { get; set; }
 
         public Player WhitePlayer { get; set; }
+
+        public void Dispose()
+        {
+            if (IsStarted)
+            {
+                EndGame();
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

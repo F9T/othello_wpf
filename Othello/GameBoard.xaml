@@ -24,7 +24,8 @@
         <ItemsControl ItemsSource="{Binding Board.Pawns}" Grid.Column="1" Grid.Row="1">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <UniformGrid Rows="8" Columns="8" MinWidth="300" MinHeight="300">
+                    <!--Text="{Binding Source={StaticResource versionManager}, Path=FilterString}"-->
+                    <UniformGrid Rows="{Binding Board.SquareSize}" Columns="{Binding Board.SquareSize}" MinWidth="300" MinHeight="300">
                         <UniformGrid.Style>
                             <Style TargetType="{x:Type UniformGrid}">
                                 <Setter Property="Background" Value="{Binding BackgroundColor}"/>
