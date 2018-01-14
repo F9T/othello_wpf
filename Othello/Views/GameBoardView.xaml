@@ -1,11 +1,13 @@
 ﻿<UserControl 
-    x:Class="Othello.GameBoard"
+    x:Class="Othello.Views.GameBoardView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:othello="clr-namespace:Othello"
-    mc:Ignorable="d"
+    xmlns:views="clr-namespace:Othello.Views"
+    xmlns:viewsModels="clr-namespace:Othello.ViewsModels"
+    mc:Ignorable="d" Background="Black"
 >
     <Grid>
         <Grid.ColumnDefinitions>
@@ -18,9 +20,9 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Column="1" Grid.Row="0" FontWeight="Bold" FontSize="24" Text="{Binding CurrentPlayer.Name, StringFormat='{}{0} player to play', TargetNullValue=''}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <othello:PlayerUserControl Player="{Binding BlackPlayer}" Grid.Column="0" Grid.Row="1" />
-        <othello:PlayerUserControl Player="{Binding WhitePlayer}" Grid.Column="2" Grid.Row="1" />
+        <TextBlock Grid.Column="1" Grid.Row="0" Foreground="White" FontWeight="Bold" FontSize="24" Text="{Binding CurrentPlayer.Name, StringFormat='{}{0} player to play', TargetNullValue=''}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <views:PlayerView Player="{Binding Board.BlackPlayer}" Grid.Column="0" Grid.Row="1" />
+        <views:PlayerView Player="{Binding Board.WhitePlayer}" Grid.Column="2" Grid.Row="1" />
         <ItemsControl ItemsSource="{Binding Board.Pawns}" Grid.Column="1" Grid.Row="1">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -47,14 +49,21 @@
                 <DataTemplate>
                     <Label Tag="{Binding Number}" BorderThickness="1" BorderBrush="Black" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MouseLeftButtonUp="CasePlayable_OnMouseLeftButtonUp">
                         <Label.Style>
-                            <Style>
+                            <Style TargetType="{x:Type Label}">
                                 <Style.Triggers>
-                                    <!--<EventTrigger RoutedEvent="Label.MouseLeftButtonUp">
+                                  <!--  <EventTrigger RoutedEvent="Label.MouseLeftButtonUp">
                                         <BeginStoryboard>
                                             <Storyboard BeginTime="00:00:00.000" Duration="00:00:1.000">
                                                 <DoubleAnimation
                                                                  Storyboard.TargetProperty="Opacity" 
                                                                  From="1" To="0" Duration="00:00:1.000" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                        <BeginStoryboard>
+                                            <Storyboard BeginTime="00:00:0.000" Duration="00:00:1.000">
+                                                <DoubleAnimation
+                                                    Storyboard.TargetProperty="Opacity" 
+                                                    From="0" To="1" Duration="00:00:1.000" />
                                             </Storyboard>
                                         </BeginStoryboard>
                                     </EventTrigger>-->

@@ -4,22 +4,146 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Othello.Annotations;
+using System.Timers;
+using System.Windows.Input;
+using System.Windows.Media;
+using Othello.Models;
+using Othello.Properties;
 
 namespace Othello
 {
-    public class Board : INotifyPropertyChanged
+    public class Board : IModel, INotifyPropertyChanged, IDisposable
     {
-        public static int SquareSize = 8;
+        private readonly Timer timer;
 
         public Board()
         {
+            RibbonItems = new ObservableCollection<RibbonItem>
+            {
+                new RibbonItem("../Images/play.png", new RelayCommand(_param => StartGame())),
+                new RibbonItem("../Images/pause.png", new RelayCommand(_param => StopGame())),
+                new RibbonItem("../Images/save.png", new RelayCommand(_param => Save())),
+                new RibbonItem("../Images/load.png", new RelayCommand(_param => Open()))
+            };
+            timer = new Timer(1000);
+            timer.Elapsed += TimerTick;
             Initialize();
+            InitializeGame();
         }
 
-        private void Initialize()
+        public ObservableCollection<RibbonItem> RibbonItems { get; set; }
+
+        public void Initialize()
         {
             Pawns = new ObservableCollection<Pawn>();
+            BackgroundColor = new SolidColorBrush(Colors.MediumSeaGreen);
+            UseBackgroundImage = false;
+            BackgroundImage = "/Images/background.png";
+            BlackPlayer = new Player(PawnColor.Black, "Black");
+            WhitePlayer = new Player(PawnColor.White, "White");
+            SquareSize = 8;
+        }
+
+        public void InitializeGame()
+        {
+            IsStarted = false;
+            Reset(BlackPlayer, WhitePlayer);
+            /**
+             * 
+             * remove after
+             */
+            StartGame();
+        }
+
+        private void TimerTick(object _sender, ElapsedEventArgs _elapsedEventArgs)
+        {
+            if (IsStarted)
+            {
+                CurrentPlayer.Time -= new TimeSpan(0, 0, 0, 1);
+            }
+        }
+
+        public void StartGame()
+        {
+            BlackPlayer.Reset();
+            WhitePlayer.Reset();
+            CurrentPlayer = BlackPlayer;
+            GetLegalMove(CurrentPlayer);
+            UpdateScore();
+            IsStarted = true;
+            timer.Start();
+        }
+
+        public void ResumeGame()
+        {
+            IsStarted = true;
+            timer.Start();
+        }
+
+        public void StopGame()
+        {
+            IsStarted = false;
+            timer.Stop();
+        }
+
+        public void EndGame()
+        {
+            timer.Elapsed -= TimerTick;
+            timer?.Dispose();
+        }
+
+        public void Save()
+        {
+            
+        }
+
+        public void Open()
+        {
+            
+        }
+
+        public void ChangePlayer()
+        {
+            CurrentPlayer = CurrentPlayer == WhitePlayer ? BlackPlayer : WhitePlayer;
+            if (GetLegalMove(CurrentPlayer).Count == 0)
+            {
+                CurrentPlayer = CurrentPlayer == WhitePlayer ? BlackPlayer : WhitePlayer;
+            }
+        }
+
+        private void UpdateScore()
+        {
+            UpdateScore(BlackPlayer);
+            UpdateScore(WhitePlayer);
+        }
+
+        public bool UseBackgroundImage { get; set; }
+
+        public int SquareSize { get; set; }
+
+        public ObservableCollection<Pawn> Pawns { get; set; }
+
+        public string BackgroundImage { get; set; }
+
+        public bool IsStarted { get; set; }
+
+        public Brush BackgroundColor { get; set; }
+
+        public Player CurrentPlayer { get; set; }
+
+        public Player BlackPlayer { get; set; }
+
+        public Player WhitePlayer { get; set; }
+
+        public void PlayMove(int _index)
+        {
+            bool isPlayable = IsPlayable(_index, CurrentPlayer, true);
+            if (isPlayable)
+            {
+                AddPawn(_index, CurrentPlayer);
+                ChangePlayer();
+                UpdateScore();
+            }
         }
 
         public void Reset(Player _blackPlayer, Player _whitePlayer)
@@ -188,7 +312,13 @@ namespace Othello
             Pawns.ElementAt(_index).Owner = _player;
         }
 
-        public ObservableCollection<Pawn> Pawns { get; set; }
+        public void Dispose()
+        {
+            if (IsStarted)
+            {
+                EndGame();
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

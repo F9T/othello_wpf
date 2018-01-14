@@ -1,9 +1,9 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Controls;
 using MahApps.Metro.Controls;
-using Othello.Annotations;
+using Othello.Properties;
+using Othello.ViewsModels;
 
 namespace Othello
 {
@@ -12,31 +12,25 @@ namespace Othello
     /// </summary>
     public partial class MainWindow : MetroWindow, INotifyPropertyChanged
     {
-        private ItemView selectItemView;
-
         public MainWindow()
         {
             InitializeComponent();
-            Views = new ObservableCollection<ItemView>
-            {
-                new ItemView("Images/game.png", new GameBoard()),
-                new ItemView("Images/settings.png", new SettingUsercontrol())
-            };
-            SelectItemView = Views.ElementAt(0);
-            DataContext = this;
+            MainViewModel = new MainViewModel();
+            DataContext = MainViewModel;
         }
 
-        public ItemView SelectItemView
+        public MainViewModel MainViewModel { get; set; }
+
+        private void View_OnSelectionChanged(object _sender, SelectionChangedEventArgs _e)
         {
-            get => selectItemView;
-            set
+            if (_sender is ListView view)
             {
-                selectItemView = value;
-                OnPropertyChanged(nameof(SelectItemView));
+                if (view.SelectedItem is ItemView)
+                {
+                    MainViewModel.ChangeView(((ItemView)view.SelectedItem).Name);
+                }
             }
         }
-
-        public ObservableCollection<ItemView> Views { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

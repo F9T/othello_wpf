@@ -1,17 +1,15 @@
-﻿using System.Windows.Controls;
-
-namespace Othello
+﻿namespace Othello
 {
     public class ItemView
     {
-        public ItemView(string _imageSource, UserControl _view)
+        public ItemView(string _name, string _imageSource)
         {
+            Name = _name;
             ImageSource = _imageSource;
-            View = _view;
         }
 
-        public string ImageSource { get; set; }
+        public string Name { get; set; }
 
-        public UserControl View { get; set; }
+        public string ImageSource { get; set; }
     }
 }

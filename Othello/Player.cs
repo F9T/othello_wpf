@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
-using Othello.Annotations;
+using Othello.Properties;
 
 namespace Othello
 {
@@ -20,11 +20,11 @@ namespace Othello
                 Color = _color;
                 if (Color == PawnColor.Black)
                 {
-                    ImageSource = "Images/black_pawn.png";
+                    ImageSource = "../Images/black_pawn.png";
                 }
                 else if (Color == PawnColor.White)
                 {
-                    ImageSource = "Images/white_pawn.png";
+                    ImageSource = "../Images/white_pawn.png";
                 }
             }
             else

@@ -1,0 +1,38 @@
+﻿<UserControl 
+    x:Class="Othello.Views.PlayerView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:Othello"
+    xmlns:views="clr-namespace:Othello.Views"
+    mc:Ignorable="d" HorizontalAlignment="Center"
+>
+    <UserControl.Resources>
+        <Style x:Key="TextblockTitleStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="28"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style x:Key="TextblockInfoStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="50"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource TextblockTitleStyle}" Text="{Binding Player.Name, StringFormat='{}{0} player', TargetNullValue='', RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:PlayerView}}}"/>
+        <Image Grid.Row="1" Grid.Column="0" MaxWidth="32" MaxHeight="32" HorizontalAlignment="Left" Source="{Binding Player.ImageSource, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:PlayerView}}}" />
+        <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Style="{StaticResource TextblockInfoStyle}" Text="{Binding Player.ActualScore, StringFormat='Score : {0}', RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:PlayerView}}}"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource TextblockInfoStyle}" Text="{Binding Player.Time, StringFormat='Temps restant : {0}', RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:PlayerView}}}"/>
+    </Grid>
+</UserControl>

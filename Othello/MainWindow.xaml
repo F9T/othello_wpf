@@ -6,17 +6,33 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:local="clr-namespace:Othello"
+    xmlns:views="clr-namespace:Othello.Views"
+    xmlns:viewsModels="clr-namespace:Othello.ViewsModels"
     mc:Ignorable="d" MinWidth="800" MinHeight="410"
     WindowStartupLocation="CenterScreen" Title="Othello"
     BorderBrush="{DynamicResource AccentBaseColorBrush}" BorderThickness="1"
 >
+    <controls:MetroWindow.Resources>
+        <DataTemplate DataType="{x:Type viewsModels:BoardViewModel}">
+            <views:GameBoardView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewsModels:SettingsViewModel}">
+            <views:SettingsView />
+        </DataTemplate>
+    </controls:MetroWindow.Resources>
     <!--<local:GameBoard Grid.Row="0" />-->
-    <Grid Background="#F5F5F5">
+    <Grid Background="Black">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="48"/>
+            <ColumnDefinition Width="70"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <ListView ItemsSource="{Binding Views}" SelectedItem="{Binding SelectItemView}" Background="#FF444444" Padding="5" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Label Background="#FF444444" Grid.Column="0" Grid.Row="0" />
+        <views:RibbonBarView Grid.Column="1" Grid.Row="0" ViewModel="{Binding CurrentViewModel}" Background="#FF444444" />
+        <ListView Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Views}" SelectionChanged="View_OnSelectionChanged" Background="#FF444444" Padding="5" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Style.Resources>
@@ -28,16 +44,23 @@
             </ListView.ItemContainerStyle>
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <StackPanel Orientation="Vertical" />
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" />
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Image Source="{Binding ImageSource}" Width="43" Height="43" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <Image Source="{Binding ImageSource}" Width="32" Height="32" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <ContentControl Grid.Column="1" Content="{Binding SelectItemView.View}"/>
+        <ContentControl Grid.Column="1" Grid.Row="1" Content="{Binding CurrentViewModel}">
+            <local:ContentControlExtensions.ContentChangedAnimation>
+                <Storyboard>
+                    <ThicknessAnimation From="0,500,0,-500" To="0" Duration="0:0:0.8" Storyboard.TargetProperty="Margin"/>
+                    <DoubleAnimation From="0.2" To="1" Duration="0:0:1.5" Storyboard.TargetProperty="Opacity"/>
+                </Storyboard>
+            </local:ContentControlExtensions.ContentChangedAnimation>
+        </ContentControl>
     </Grid>
 </controls:MetroWindow>
 

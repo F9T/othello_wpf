@@ -6,11 +6,11 @@ using System.Windows;
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
 [assembly: AssemblyTitle("Othello")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Jeu Othello")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("He-Arc")]
 [assembly: AssemblyProduct("Othello")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyCopyright("Copyright © Lovis Thomas, Ombang Ndo Charles 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

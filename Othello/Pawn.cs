@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Othello.Annotations;
+using Othello.Properties;
 
 namespace Othello
 {
