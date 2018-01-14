@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
+using Othello.Pawns;
 using Othello.Properties;
 
 namespace Othello

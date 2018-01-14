@@ -57,6 +57,7 @@
     <Compile Include="ContentControlExtension.cs" />
     <Compile Include="ItemView.cs" />
     <Compile Include="Models\IModel.cs" />
+    <Compile Include="Models\Settings.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="Models\RibbonItem.cs" />
     <Compile Include="ViewsModels\BoardViewModel.cs" />
@@ -69,6 +70,10 @@
     <Compile Include="Views\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Styles\MainStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\GameBoardView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -81,8 +86,8 @@
     <Compile Include="Views\GameBoardView.xaml.cs">
       <DependentUpon>GameBoardView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pawn.cs" />
-    <Compile Include="PawnColor.cs" />
+    <Compile Include="Pawns\Pawn.cs" />
+    <Compile Include="Pawns\PawnColor.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -156,6 +161,9 @@
   <ItemGroup>
     <Resource Include="Images\pause.png" />
     <Resource Include="Images\start.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\quit.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -5,12 +5,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Timers;
-using System.Windows.Input;
 using System.Windows.Media;
-using Othello.Models;
+using Othello.Pawns;
 using Othello.Properties;
 
-namespace Othello
+namespace Othello.Models
 {
     public class Board : IModel, INotifyPropertyChanged, IDisposable
     {
@@ -20,10 +19,10 @@ namespace Othello
         {
             RibbonItems = new ObservableCollection<RibbonItem>
             {
-                new RibbonItem("../Images/play.png", new RelayCommand(_param => StartGame())),
-                new RibbonItem("../Images/pause.png", new RelayCommand(_param => StopGame())),
-                new RibbonItem("../Images/save.png", new RelayCommand(_param => Save())),
-                new RibbonItem("../Images/load.png", new RelayCommand(_param => Open()))
+                new RibbonItem("Play", "../Images/start.png", new RelayCommand(_param => StartGame(), _param => !IsStarted)),
+                new RibbonItem("Stop", "../Images/pause.png", new RelayCommand(_param => StopGame(),  _param => IsStarted)),
+                new RibbonItem("Save", "../Images/save.png", new RelayCommand(_param => Save())),
+                new RibbonItem("Open", "../Images/load.png", new RelayCommand(_param => Open()))
             };
             timer = new Timer(1000);
             timer.Elapsed += TimerTick;

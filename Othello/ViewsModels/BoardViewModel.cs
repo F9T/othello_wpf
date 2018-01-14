@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using System.Windows.Media;
+using Othello.Models;
 
 namespace Othello.ViewsModels
 {
@@ -85,6 +86,11 @@ namespace Othello.ViewsModels
                     OnPropertyChanged(nameof(CurrentPlayer));
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            Board?.Dispose();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

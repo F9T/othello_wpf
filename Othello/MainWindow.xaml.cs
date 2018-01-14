@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 using MahApps.Metro.Controls;
@@ -10,7 +11,7 @@ namespace Othello
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : MetroWindow, INotifyPropertyChanged
+    public partial class MainWindow : MetroWindow, INotifyPropertyChanged, IDisposable
     {
         public MainWindow()
         {
@@ -30,6 +31,16 @@ namespace Othello
                     MainViewModel.ChangeView(((ItemView)view.SelectedItem).Name);
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            MainViewModel?.Dispose();
+        }
+
+        private void MainWindow_OnClosed(object _sender, EventArgs _e)
+        {
+            Dispose();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

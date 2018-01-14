@@ -1,6 +1,9 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
+using Othello.Models;
 using Othello.Views;
 
 namespace Othello.ViewsModels
@@ -14,7 +17,8 @@ namespace Othello.ViewsModels
             Views = new ObservableCollection<ItemView>
             {
                 new ItemView("Game", "../Images/game.png"),
-                new ItemView("Settings", "../Images/settings.png")
+                new ItemView("Settings", "../Images/settings.png"),
+                new ItemView("Quit", "../Images/quit.png")
             };
             BoardViewModel = new BoardViewModel();
             CurrentViewModel = BoardViewModel;
@@ -26,10 +30,13 @@ namespace Othello.ViewsModels
             {
                 case "game":
                     CurrentViewModel = BoardViewModel;
-                break;
+                    break;
                 case "settings":
                     CurrentViewModel = new SettingsViewModel();
-                break;
+                    break;
+                case "quit":
+                    Application.Current.Shutdown(0);
+                    break;
             }
         }
 
@@ -47,6 +54,11 @@ namespace Othello.ViewsModels
                 currentViewModel = value;
                 OnPropertyChanged(nameof(CurrentViewModel));
             }
+        }
+
+        public void Dispose()
+        {
+            BoardViewModel?.Dispose();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
