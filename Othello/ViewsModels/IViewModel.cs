@@ -7,6 +7,6 @@ namespace Othello.ViewsModels
 {
     public interface IViewModel : INotifyPropertyChanged, IDisposable
     {
-        ObservableCollection<RibbonItem> RibbonItems { get; }
+        ObservableCollection<RibbonItem> RibbonItems { get; set; }
     }
 }

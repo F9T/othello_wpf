@@ -5,10 +5,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-    xmlns:local="clr-namespace:Othello" Closed="MainWindow_OnClosed"
-    xmlns:views="clr-namespace:Othello.Views"
+    xmlns:views="clr-namespace:Othello.Views" Closed="MainWindow_OnClosed"
     xmlns:viewsModels="clr-namespace:Othello.ViewsModels"
-    mc:Ignorable="d" MinWidth="800" MinHeight="410"
+    mc:Ignorable="d"
     WindowStartupLocation="CenterScreen" Title="Othello"
     BorderBrush="{DynamicResource AccentBaseColorBrush}" BorderThickness="1"
 >
@@ -53,14 +52,7 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <ContentControl Grid.Column="1" Grid.Row="1" Content="{Binding CurrentViewModel}">
-            <local:ContentControlExtensions.ContentChangedAnimation>
-                <Storyboard>
-                    <ThicknessAnimation From="0,500,0,-500" To="0" Duration="0:0:0.8" Storyboard.TargetProperty="Margin"/>
-                    <DoubleAnimation From="0.2" To="1" Duration="0:0:1.5" Storyboard.TargetProperty="Opacity"/>
-                </Storyboard>
-            </local:ContentControlExtensions.ContentChangedAnimation>
-        </ContentControl>
+        <controls:TransitioningContentControl Grid.Column="1" Grid.Row="1" Content="{Binding CurrentViewModel}" Transition="Default" />
     </Grid>
 </controls:MetroWindow>
 

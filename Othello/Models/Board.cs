@@ -1,35 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Timers;
+using System.Windows.Forms;
 using System.Windows.Media;
 using Othello.Pawns;
-using Othello.Properties;
+using Timer = System.Timers.Timer;
 
 namespace Othello.Models
 {
-    public class Board : IModel, INotifyPropertyChanged, IDisposable
+    [Serializable]
+    public class Board : IModel
     {
+        [NonSerialized]
         private readonly Timer timer;
 
         public Board()
         {
-            RibbonItems = new ObservableCollection<RibbonItem>
-            {
-                new RibbonItem("Play", "../Images/start.png", new RelayCommand(_param => StartGame(), _param => !IsStarted)),
-                new RibbonItem("Stop", "../Images/pause.png", new RelayCommand(_param => StopGame(),  _param => IsStarted)),
-                new RibbonItem("Save", "../Images/save.png", new RelayCommand(_param => Save())),
-                new RibbonItem("Open", "../Images/load.png", new RelayCommand(_param => Open()))
-            };
             timer = new Timer(1000);
             timer.Elapsed += TimerTick;
             Initialize();
             InitializeGame();
         }
-
+        
         public ObservableCollection<RibbonItem> RibbonItems { get; set; }
 
         public void Initialize()
@@ -46,12 +40,8 @@ namespace Othello.Models
         public void InitializeGame()
         {
             IsStarted = false;
+            IsCreated = false;
             Reset(BlackPlayer, WhitePlayer);
-            /**
-             * 
-             * remove after
-             */
-            StartGame();
         }
 
         private void TimerTick(object _sender, ElapsedEventArgs _elapsedEventArgs)
@@ -62,13 +52,19 @@ namespace Othello.Models
             }
         }
 
-        public void StartGame()
+        public void NewGame()
         {
             BlackPlayer.Reset();
             WhitePlayer.Reset();
             CurrentPlayer = BlackPlayer;
             GetLegalMove(CurrentPlayer);
             UpdateScore();
+            IsCreated = true;
+            StartGame();
+        }
+
+        public void StartGame()
+        {
             IsStarted = true;
             timer.Start();
         }
@@ -89,11 +85,12 @@ namespace Othello.Models
         {
             timer.Elapsed -= TimerTick;
             timer?.Dispose();
+            IsCreated = false;
         }
 
         public void Save()
         {
-            
+            var directoryChooser = new FolderBrowserDialog();
         }
 
         public void Open()
@@ -125,6 +122,8 @@ namespace Othello.Models
         public string BackgroundImage { get; set; }
 
         public bool IsStarted { get; set; }
+
+        public bool IsCreated { get; set; }
 
         public Brush BackgroundColor { get; set; }
 
@@ -317,14 +316,6 @@ namespace Othello.Models
             {
                 EndGame();
             }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string _propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(_propertyName));
         }
     }
 }

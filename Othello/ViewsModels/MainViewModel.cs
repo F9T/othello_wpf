@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using Othello.Models;
-using Othello.Views;
 
 namespace Othello.ViewsModels
 {
@@ -44,7 +42,7 @@ namespace Othello.ViewsModels
 
         public ObservableCollection<ItemView> Views { get; set; }
 
-        public ObservableCollection<RibbonItem> RibbonItems { get; }
+        public ObservableCollection<RibbonItem> RibbonItems { get; set; }
 
         public IViewModel CurrentViewModel
         {

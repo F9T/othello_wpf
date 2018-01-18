@@ -13,6 +13,54 @@ namespace Othello.ViewsModels
         {
             Board = new Board();
             PlayCommand = new RelayCommand(_param => Board.PlayMove((int)_param), _param => true);
+            RibbonItems = new ObservableCollection<RibbonItem>
+            {
+                new RibbonItem("NEW", "../Images/game.png", new RelayCommand(_param => NewGame(), _param => !IsCreated)),
+                new RibbonItem("PLAY", "../Images/start.png", new RelayCommand(_param => StartGame(), _param => IsCreated && !IsStarted)),
+                new RibbonItem("STOP", "../Images/pause.png", new RelayCommand(_param => StopGame(),  _param => IsCreated && IsStarted), true),
+                new RibbonItem("SAVE", "../Images/save.png", new RelayCommand(_param => Save(), _param => IsCreated)),
+                new RibbonItem("OPEN", "../Images/load.png", new RelayCommand(_param => Load()))
+            };
+        }
+        private void NewGame()
+        {
+            Board.NewGame();
+            IsCreated = true;
+            StartGame();
+        }
+
+        private void StartGame()
+        {
+            IsStarted = true;
+            Board.StartGame();
+        }
+
+        private void ResumeGame()
+        {
+            IsStarted = true;
+            Board.ResumeGame();
+        }
+
+        private void StopGame()
+        {
+            IsStarted = false;
+            Board.StopGame();
+        }
+
+        private void EndGame()
+        {
+            Board.EndGame();
+            IsCreated = false;
+        }
+
+        private void Save()
+        {
+            
+        }
+
+        private void Load()
+        {
+            
         }
 
         public Board Board { get; set; }
@@ -30,7 +78,11 @@ namespace Othello.ViewsModels
             }
         }
 
-        public ObservableCollection<RibbonItem> RibbonItems => Board.RibbonItems;
+        public ObservableCollection<RibbonItem> RibbonItems
+        {
+            get => Board.RibbonItems;
+            set => Board.RibbonItems = value;
+        }
 
         public int SquareSize { get; set; }
 
@@ -52,12 +104,31 @@ namespace Othello.ViewsModels
             get => Board.IsStarted;
             set
             {
-                if (Board.IsStarted != value)
-                {
-                    Board.IsStarted = value;
-                    OnPropertyChanged(nameof(IsStarted));
-                }
+                Board.IsStarted = value;
+                OnPropertyChanged(nameof(IsStarted));
             }
+        }
+
+        public bool IsCreated
+        {
+            get => Board.IsCreated;
+            set
+            {
+                Board.IsCreated = value;
+                OnPropertyChanged(nameof(IsCreated));
+            }
+        }
+
+        public Player BlackPlayer
+        {
+            get => Board.BlackPlayer;
+            set => Board.BlackPlayer = value;
+        }
+
+        public Player WhitePlayer
+        {
+            get => Board.WhitePlayer;
+            set => Board.WhitePlayer = value;
         }
 
         public ICommand PlayCommand { get; set; }

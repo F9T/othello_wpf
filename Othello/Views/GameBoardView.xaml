@@ -7,9 +7,20 @@
     xmlns:othello="clr-namespace:Othello"
     xmlns:views="clr-namespace:Othello.Views"
     xmlns:viewsModels="clr-namespace:Othello.ViewsModels"
-    mc:Ignorable="d" Background="Black"
+    xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+    mc:Ignorable="d" Background="Black" 
 >
-    <Grid>
+    <Grid IsEnabled="{Binding IsCreated}">
+        <Grid.Style>
+            <Style TargetType="{x:Type Grid}">
+                <Style.Triggers>
+                    <Trigger Property="Opacity" Value="1.0"/>
+                    <DataTrigger Binding="{Binding IsCreated}" Value="False">
+                        <Setter Property="Opacity" Value="0.3" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Style>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="250"/>
             <ColumnDefinition Width="*"/>
@@ -21,8 +32,8 @@
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
         <TextBlock Grid.Column="1" Grid.Row="0" Foreground="White" FontWeight="Bold" FontSize="24" Text="{Binding CurrentPlayer.Name, StringFormat='{}{0} player to play', TargetNullValue=''}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <views:PlayerView Player="{Binding Board.BlackPlayer}" Grid.Column="0" Grid.Row="1" />
-        <views:PlayerView Player="{Binding Board.WhitePlayer}" Grid.Column="2" Grid.Row="1" />
+        <views:PlayerView Player="{Binding BlackPlayer}" Grid.Column="0" Grid.Row="1" />
+        <views:PlayerView Player="{Binding WhitePlayer}" Grid.Column="2" Grid.Row="1" />
         <ItemsControl ItemsSource="{Binding Board.Pawns}" Grid.Column="1" Grid.Row="1">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
