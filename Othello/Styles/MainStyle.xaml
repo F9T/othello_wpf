@@ -42,15 +42,21 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <!-- Player style -->
-    <Style x:Key="PlayerTitleStyle" TargetType="{x:Type TextBlock}">
-        <Setter Property="FontSize" Value="28"/>
-        <Setter Property="FontWeight" Value="Bold"/>
+    <!-- All style -->
+    <Style x:Key="MainTextBlockStyle" TargetType="{x:Type TextBlock}">
         <Setter Property="Foreground" Value="White"/>
     </Style>
-    <Style x:Key="PlayerInfoStyle" TargetType="{x:Type TextBlock}">
+    <!-- Player style -->
+    <Style x:Key="PlayerTitleStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MainTextBlockStyle}">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+    <Style x:Key="PlayerInfoStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MainTextBlockStyle}">
         <Setter Property="FontSize" Value="16"/>
         <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="Foreground" Value="White"/>
+    </Style>
+    <Style x:Key="CurrentPlayerInfoStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MainTextBlockStyle}">
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontWeight" Value="Bold"/>
     </Style>
 </ResourceDictionary>

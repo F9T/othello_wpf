@@ -18,6 +18,9 @@
                     <DataTrigger Binding="{Binding IsCreated}" Value="False">
                         <Setter Property="Opacity" Value="0.3" />
                     </DataTrigger>
+                    <DataTrigger Binding="{Binding IsStarted}" Value="False">
+                        <Setter Property="Opacity" Value="0.3" />
+                    </DataTrigger>
                 </Style.Triggers>
             </Style>
         </Grid.Style>
@@ -31,7 +34,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Column="1" Grid.Row="0" Foreground="White" FontWeight="Bold" FontSize="24" Text="{Binding CurrentPlayer.Name, StringFormat='{}{0} player to play', TargetNullValue=''}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <TextBlock Grid.Column="1" Grid.Row="0" Style="{StaticResource CurrentPlayerInfoStyle}" Text="{Binding CurrentPlayer.Name, StringFormat='{}{0} player to play', TargetNullValue=''}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         <views:PlayerView Player="{Binding BlackPlayer}" Grid.Column="0" Grid.Row="1" />
         <views:PlayerView Player="{Binding WhitePlayer}" Grid.Column="2" Grid.Row="1" />
         <ItemsControl ItemsSource="{Binding Board.Pawns}" Tag="{Binding .}" Grid.Column="1" Grid.Row="1">

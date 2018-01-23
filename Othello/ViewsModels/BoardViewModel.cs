@@ -13,7 +13,7 @@ namespace Othello.ViewsModels
         public BoardViewModel()
         {
             Board = new Board();
-            PlayCommand = new RelayCommand(_param => Board.PlayMove((int)_param), _param => IsStarted && IsCreated);
+            PlayCommand = new RelayCommand(_param => PlayMove((int)_param), _param => IsStarted && IsCreated);
             RibbonItems = new ObservableCollection<AbstractRibbonItem>
             {
                 new RibbonButtonItem("NEW", "../Images/game.png", new RelayCommand(_param => NewGame(), _param => true)),
@@ -24,10 +24,18 @@ namespace Othello.ViewsModels
                 new RibbonButtonItem("OPEN", "../Images/load.png", new RelayCommand(_param => Load()))
             };
         }
+
+        private void PlayMove(int _index)
+        {
+            Board.PlayMove(_index);
+            CurrentPlayer = Board.CurrentPlayer;
+        }
+
         private void NewGame()
         {
             Board.NewGame();
             IsCreated = true;
+            CurrentPlayer = Board.CurrentPlayer;
             StartGame();
         }
 
@@ -43,7 +51,7 @@ namespace Othello.ViewsModels
             Board.ResumeGame();
         }
 
-        private void StopGame()
+        public void StopGame()
         {
             IsStarted = false;
             Board.StopGame();
@@ -159,11 +167,8 @@ namespace Othello.ViewsModels
             get => Board.CurrentPlayer;
             set
             {
-                if (Board.CurrentPlayer != value)
-                {
-                    Board.CurrentPlayer = value;
-                    OnPropertyChanged(nameof(CurrentPlayer));
-                }
+                Board.CurrentPlayer = value;
+                OnPropertyChanged(nameof(CurrentPlayer));
             }
         }
 

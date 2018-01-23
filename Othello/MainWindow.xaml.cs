@@ -26,9 +26,9 @@ namespace Othello
         {
             if (_sender is ListView view)
             {
-                if (view.SelectedItem is ItemView)
+                if (view.SelectedItem is ItemView itemView)
                 {
-                    MainViewModel.ChangeView(((ItemView)view.SelectedItem).Name);
+                    MainViewModel.ChangeView(itemView.Name);
                 }
             }
         }

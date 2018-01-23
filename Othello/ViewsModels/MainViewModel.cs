@@ -31,6 +31,11 @@ namespace Othello.ViewsModels
                     CurrentViewModel = BoardViewModel;
                     break;
                 case "settings":
+                    //pas fan
+                    if (BoardViewModel.IsStarted)
+                    {
+                        BoardViewModel.StopGame();
+                    }
                     CurrentViewModel = new SettingsViewModel();
                     break;
                 case "quit":

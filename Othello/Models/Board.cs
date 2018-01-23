@@ -140,8 +140,8 @@ namespace Othello
                 }
                 var saveData = new SaveData
                 {
-                    BlackScore = BlackPlayer.ActualScore,
-                    WhiteScore = WhitePlayer.ActualScore,
+                    BlackTime = BlackPlayer.Time,
+                    WhiteTime = WhitePlayer.Time,
                     CurrentPlayer = CurrentPlayer.Color,
                     Pawns = pawnsColor
                 };
@@ -219,6 +219,8 @@ namespace Othello
                 }
                 number++;
             }
+            BlackPlayer.Time = _data.BlackTime;
+            WhitePlayer.Time = _data.WhiteTime;
             CurrentPlayer = WhitePlayer;
             if (_data.CurrentPlayer == PawnColor.Black)
             {
