@@ -1,20 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Timers;
 using System.Windows.Forms;
 using System.Windows.Media;
+using Othello.Models.Ribbons;
 using Othello.Pawns;
+using Othello.Ribbons;
 using Timer = System.Timers.Timer;
 
-namespace Othello.Models
+namespace Othello
 {
     [Serializable]
     public class Board : IModel
     {
         [NonSerialized]
         private readonly Timer timer;
+        [NonSerialized]
+        private Brush backgroundColor;
 
         public Board()
         {
@@ -24,7 +31,7 @@ namespace Othello.Models
             InitializeGame();
         }
         
-        public ObservableCollection<RibbonItem> RibbonItems { get; set; }
+        public ObservableCollection<AbstractRibbonItem> RibbonItems { get; set; }
 
         public void Initialize()
         {
@@ -56,6 +63,7 @@ namespace Othello.Models
         {
             BlackPlayer.Reset();
             WhitePlayer.Reset();
+            Reset(BlackPlayer, WhitePlayer);
             CurrentPlayer = BlackPlayer;
             GetLegalMove(CurrentPlayer);
             UpdateScore();
@@ -90,12 +98,134 @@ namespace Othello.Models
 
         public void Save()
         {
-            var directoryChooser = new FolderBrowserDialog();
+            if (IsStarted)
+            {
+                StopGame();
+            }
+            var sfd = new SaveFileDialog();
+            var result = sfd.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                Serialize(sfd.FileName);
+            }
         }
 
-        public void Open()
+        private void Serialize(string _path)
         {
-            
+            var file = new FileInfo(_path);
+            if (file.Directory == null || !file.Directory.Exists)
+            {
+                MessageBox.Show($@"Directory not found : {_path}");
+                return;
+            }
+            var fs = new FileStream(file.FullName, FileMode.Create);
+            var formatter = new BinaryFormatter();
+            try
+            {
+                var pawnsColor = new ObservableCollection<PawnColor>();
+                foreach (var pawn in Pawns)
+                {
+                    if (pawn.Owner == null)
+                    {
+                        pawnsColor.Add(PawnColor.Empty);
+                    }
+                    else if (pawn.Owner.Color == PawnColor.Black)
+                    {
+                        pawnsColor.Add(PawnColor.Black);
+                    }
+                    else if (pawn.Owner.Color == PawnColor.White)
+                    {
+                        pawnsColor.Add(PawnColor.White);
+                    }
+                }
+                var saveData = new SaveData
+                {
+                    BlackScore = BlackPlayer.ActualScore,
+                    WhiteScore = WhitePlayer.ActualScore,
+                    CurrentPlayer = CurrentPlayer.Color,
+                    Pawns = pawnsColor
+                };
+                formatter.Serialize(fs, saveData);
+            }
+            catch (SerializationException e)
+            {
+                MessageBox.Show($@"Failed to serialze : {e.Message}");
+            }
+            finally
+            {
+                fs.Close();
+            }
+        }
+
+        public void Load()
+        {
+            if (IsStarted)
+            {
+                StopGame();
+            }
+            var ofd = new OpenFileDialog();
+            var result = ofd.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                Deserialize(ofd.FileName);
+            }
+        }
+
+        private void Deserialize(string _path)
+        {
+            var file = new FileInfo(_path);
+            if (!file.Exists)
+            {
+                MessageBox.Show($@"File not found : {_path}");
+                return;
+            }
+            var fs = new FileStream(_path, FileMode.Open);
+            try
+            {
+                var formatter = new BinaryFormatter();
+                var saveData = (SaveData)formatter.Deserialize(fs);
+                ReplaceBoard(saveData);
+            }
+            catch (SerializationException e)
+            {
+                Console.WriteLine($@"Failed to deserialize : {e.Message}");
+                throw;
+            }
+            finally
+            {
+                fs.Close();
+            }
+        }
+
+        private void ReplaceBoard(SaveData _data)
+        {
+            BlackPlayer.Reset();
+            WhitePlayer.Reset();
+            Pawns.Clear();
+            int number = 0;
+            foreach (var color in _data.Pawns)
+            {
+                if (color == PawnColor.Black)
+                {
+                    Pawns.Add(new Pawn(BlackPlayer, number));
+                }
+                else if (color == PawnColor.White)
+                {
+                    Pawns.Add(new Pawn(WhitePlayer, number));
+                }
+                else
+                {
+                    Pawns.Add(new Pawn(null, number));
+                }
+                number++;
+            }
+            CurrentPlayer = WhitePlayer;
+            if (_data.CurrentPlayer == PawnColor.Black)
+            {
+                CurrentPlayer = BlackPlayer;
+            }
+            GetLegalMove(CurrentPlayer);
+            UpdateScore();
         }
 
         public void ChangePlayer()
@@ -125,7 +255,11 @@ namespace Othello.Models
 
         public bool IsCreated { get; set; }
 
-        public Brush BackgroundColor { get; set; }
+        public Brush BackgroundColor
+        {
+            get => backgroundColor;
+            set => backgroundColor = value;
+        }
 
         public Player CurrentPlayer { get; set; }
 

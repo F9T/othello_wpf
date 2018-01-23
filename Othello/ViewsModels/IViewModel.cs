@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using Othello.Models;
+using Othello.Models.Ribbons;
+using Othello.Ribbons;
 
 namespace Othello.ViewsModels
 {
     public interface IViewModel : INotifyPropertyChanged, IDisposable
     {
-        ObservableCollection<RibbonItem> RibbonItems { get; set; }
+        ObservableCollection<AbstractRibbonItem> RibbonItems { get; set; }
     }
 }

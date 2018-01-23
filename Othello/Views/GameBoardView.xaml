@@ -34,7 +34,7 @@
         <TextBlock Grid.Column="1" Grid.Row="0" Foreground="White" FontWeight="Bold" FontSize="24" Text="{Binding CurrentPlayer.Name, StringFormat='{}{0} player to play', TargetNullValue=''}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         <views:PlayerView Player="{Binding BlackPlayer}" Grid.Column="0" Grid.Row="1" />
         <views:PlayerView Player="{Binding WhitePlayer}" Grid.Column="2" Grid.Row="1" />
-        <ItemsControl ItemsSource="{Binding Board.Pawns}" Grid.Column="1" Grid.Row="1">
+        <ItemsControl ItemsSource="{Binding Board.Pawns}" Tag="{Binding .}" Grid.Column="1" Grid.Row="1">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <!--Text="{Binding Source={StaticResource versionManager}, Path=FilterString}"-->
@@ -58,7 +58,7 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Label Tag="{Binding Number}" BorderThickness="1" BorderBrush="Black" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MouseLeftButtonUp="CasePlayable_OnMouseLeftButtonUp">
+                    <Label Tag="{Binding Number}" BorderThickness="1" BorderBrush="Black" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                         <Label.Style>
                             <Style TargetType="{x:Type Label}">
                                 <Style.Triggers>
@@ -88,6 +88,9 @@
                                 </Style.Triggers>
                             </Style>
                         </Label.Style>
+                        <Label.InputBindings>
+                            <MouseBinding Command="{Binding Tag.PlayCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding Number}" MouseAction="LeftClick"/>
+                        </Label.InputBindings>
                         <Label.Content>
                             <Image Stretch="Uniform" StretchDirection="Both" Source="{Binding Owner.ImageSource}" />
                         </Label.Content>

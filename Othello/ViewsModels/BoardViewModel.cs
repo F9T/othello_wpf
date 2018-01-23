@@ -3,7 +3,8 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using System.Windows.Media;
-using Othello.Models;
+using Othello.Models.Ribbons;
+using Othello.Ribbons;
 
 namespace Othello.ViewsModels
 {
@@ -12,14 +13,15 @@ namespace Othello.ViewsModels
         public BoardViewModel()
         {
             Board = new Board();
-            PlayCommand = new RelayCommand(_param => Board.PlayMove((int)_param), _param => true);
-            RibbonItems = new ObservableCollection<RibbonItem>
+            PlayCommand = new RelayCommand(_param => Board.PlayMove((int)_param), _param => IsStarted && IsCreated);
+            RibbonItems = new ObservableCollection<AbstractRibbonItem>
             {
-                new RibbonItem("NEW", "../Images/game.png", new RelayCommand(_param => NewGame(), _param => !IsCreated)),
-                new RibbonItem("PLAY", "../Images/start.png", new RelayCommand(_param => StartGame(), _param => IsCreated && !IsStarted)),
-                new RibbonItem("STOP", "../Images/pause.png", new RelayCommand(_param => StopGame(),  _param => IsCreated && IsStarted), true),
-                new RibbonItem("SAVE", "../Images/save.png", new RelayCommand(_param => Save(), _param => IsCreated)),
-                new RibbonItem("OPEN", "../Images/load.png", new RelayCommand(_param => Load()))
+                new RibbonButtonItem("NEW", "../Images/game.png", new RelayCommand(_param => NewGame(), _param => true)),
+                new RibbonButtonItem("PLAY", "../Images/start.png", new RelayCommand(_param => StartGame(), _param => IsCreated && !IsStarted)),
+                new RibbonButtonItem("STOP", "../Images/pause.png", new RelayCommand(_param => StopGame(),  _param => IsCreated && IsStarted)),
+                new RibbonSplitItem(),
+                new RibbonButtonItem("SAVE", "../Images/save.png", new RelayCommand(_param => Save(), _param => IsCreated)),
+                new RibbonButtonItem("OPEN", "../Images/load.png", new RelayCommand(_param => Load()))
             };
         }
         private void NewGame()
@@ -55,12 +57,18 @@ namespace Othello.ViewsModels
 
         private void Save()
         {
-            
+            IsStarted = false;
+            Board.Save();
         }
 
         private void Load()
         {
-            
+            IsStarted = false;
+            IsCreated = true;
+            Board.Load();
+            BlackPlayer = Board.BlackPlayer;
+            WhitePlayer = Board.WhitePlayer;
+            CurrentPlayer = Board.CurrentPlayer;
         }
 
         public Board Board { get; set; }
@@ -78,7 +86,7 @@ namespace Othello.ViewsModels
             }
         }
 
-        public ObservableCollection<RibbonItem> RibbonItems
+        public ObservableCollection<AbstractRibbonItem> RibbonItems
         {
             get => Board.RibbonItems;
             set => Board.RibbonItems = value;

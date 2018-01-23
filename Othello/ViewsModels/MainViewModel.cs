@@ -2,7 +2,8 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using Othello.Models;
+using Othello.Models.Ribbons;
+using Othello.Ribbons;
 
 namespace Othello.ViewsModels
 {
@@ -42,7 +43,7 @@ namespace Othello.ViewsModels
 
         public ObservableCollection<ItemView> Views { get; set; }
 
-        public ObservableCollection<RibbonItem> RibbonItems { get; set; }
+        public ObservableCollection<AbstractRibbonItem> RibbonItems { get; set; }
 
         public IViewModel CurrentViewModel
         {

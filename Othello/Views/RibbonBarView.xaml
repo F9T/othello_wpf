@@ -5,34 +5,26 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:local="clr-namespace:Othello.Views"
+    xmlns:ribbons="clr-namespace:Othello.Models.Ribbons"
     mc:Ignorable="d"
     d:DesignHeight="300" d:DesignWidth="300"
 >
+    <UserControl.Resources>
+        <DataTemplate x:Key="RibbonDataTemplate">
+            <Button Style="{StaticResource RibbonButtonStyle}" Command="{Binding Action}" Padding="0" Margin="15,0,0,0" Background="Transparent">
+                <StackPanel Orientation="Vertical">
+                    <Image Source="{Binding ImageSource}" />
+                    <TextBlock Text="{Binding Name}" />
+                </StackPanel>
+            </Button>
+        </DataTemplate>
+        <DataTemplate x:Key="SplitTemplate">
+            <Border Margin="15,0,0,0" BorderThickness="0,0,2,0" BorderBrush="White" HorizontalAlignment="Center"/>
+        </DataTemplate>
+        <ribbons:DataTemplateRibbonSelector x:Key="TemplateSelector" RibbonDataTemplate="{StaticResource RibbonDataTemplate}" SplitTemplate="{StaticResource SplitTemplate}" />
+    </UserControl.Resources>
     <StackPanel Orientation="Horizontal" Margin="15,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Center">
-        <ItemsControl ItemsSource="{Binding ViewModel.RibbonItems, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:RibbonBarView}}}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Border>
-                        <Button Style="{StaticResource RibbonButtonStyle}" Command="{Binding Action}" Padding="0" Margin="15,0,0,0" Background="Transparent">
-                            <StackPanel Orientation="Vertical">
-                                <Image Source="{Binding ImageSource}" />
-                                <TextBlock Text="{Binding Name}" />
-                            </StackPanel>
-                        </Button>
-                        <Border.Style>
-                            <Style TargetType="{x:Type Border}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Split}" Value="True">
-                                        <Setter Property="BorderThickness" Value="0,0,2,0" />
-                                        <Setter Property="Padding" Value="0,0,15,0" />
-                                        <Setter Property="BorderBrush" Value="White" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
-                    </Border>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
+        <ItemsControl ItemsSource="{Binding ViewModel.RibbonItems, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:RibbonBarView}}}" ItemTemplateSelector="{StaticResource TemplateSelector}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal" />

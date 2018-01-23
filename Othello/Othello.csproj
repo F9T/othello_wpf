@@ -57,9 +57,13 @@
     </ApplicationDefinition>
     <Compile Include="ItemView.cs" />
     <Compile Include="Models\IModel.cs" />
+    <Compile Include="Models\Ribbons\AbstractRibbonItem.cs" />
+    <Compile Include="Models\Ribbons\DataTemplateRibbonSelector.cs" />
+    <Compile Include="Models\Ribbons\RibbonSplitItem.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="RelayCommand.cs" />
-    <Compile Include="Models\RibbonItem.cs" />
+    <Compile Include="Models\Ribbons\RibbonButtonItem.cs" />
+    <Compile Include="SaveData.cs" />
     <Compile Include="ViewsModels\BoardViewModel.cs" />
     <Compile Include="ViewsModels\IViewModel.cs" />
     <Compile Include="ViewsModels\MainViewModel.cs" />

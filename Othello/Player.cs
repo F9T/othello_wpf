@@ -81,7 +81,7 @@ namespace Othello
         }
 
         public PawnColor Color { get; set; }
-
+        
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]

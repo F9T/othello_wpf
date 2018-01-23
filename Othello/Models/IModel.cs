@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using Othello.Models.Ribbons;
+using Othello.Ribbons;
 
-namespace Othello.Models
+namespace Othello
 {
     public interface IModel : IDisposable
     {
-        ObservableCollection<RibbonItem> RibbonItems { get; set; }
+        ObservableCollection<AbstractRibbonItem> RibbonItems { get; set; }
 
         void Initialize();
     }

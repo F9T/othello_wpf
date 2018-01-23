@@ -18,16 +18,6 @@ namespace Othello.Views
         {
             InitializeComponent();
         }
-        
-
-        private void CasePlayable_OnMouseLeftButtonUp(object _sender, MouseButtonEventArgs _e)
-        {
-            if (_sender is Label label)
-            {
-                int index = Convert.ToInt32(label.Tag);
-                ((BoardViewModel) DataContext).PlayCommand.Execute(index);
-            }
-        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

@@ -1,13 +1,14 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Othello.Models;
+using Othello.Models.Ribbons;
+using Othello.Ribbons;
 
 namespace Othello.ViewsModels
 {
     public class SettingsViewModel : IViewModel
     {
-        public ObservableCollection<RibbonItem> RibbonItems { get; set; }
+        public ObservableCollection<AbstractRibbonItem> RibbonItems { get; set; }
 
         public void Dispose()
         {

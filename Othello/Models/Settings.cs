@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
+using Othello.Models.Ribbons;
+using Othello.Ribbons;
 
-namespace Othello.Models
+namespace Othello
 {
     public class Settings : IModel
     {
@@ -14,6 +16,6 @@ namespace Othello.Models
             
         }
 
-        public ObservableCollection<RibbonItem> RibbonItems { get; set; }
+        public ObservableCollection<AbstractRibbonItem> RibbonItems { get; set; }
     }
 }

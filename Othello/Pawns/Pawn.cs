@@ -1,9 +1,11 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Othello.Properties;
 
 namespace Othello.Pawns
 {
+    [Serializable]
     public class Pawn : INotifyPropertyChanged
     {
         private bool isPlayable;
@@ -42,7 +44,7 @@ namespace Othello.Pawns
         {
             return Owner?.Color ?? PawnColor.Empty;
         }
-
+        
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
