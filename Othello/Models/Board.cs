@@ -21,7 +21,7 @@ namespace Othello
         [NonSerialized]
         private readonly Timer timer;
         [NonSerialized]
-        private Brush backgroundColor;
+        private SolidColorBrush backgroundColor;
 
         public Board()
         {
@@ -59,8 +59,22 @@ namespace Othello
             }
         }
 
+        public string GetWinner()
+        {
+            if (BlackPlayer.ActualScore > WhitePlayer.ActualScore)
+            {
+                return "black";
+            }
+            if (BlackPlayer.ActualScore < WhitePlayer.ActualScore)
+            {
+                return "white";
+            }
+            return "equality";
+        }
+
         public void NewGame()
         {
+            PlayerPassName = null;
             BlackPlayer.Reset();
             WhitePlayer.Reset();
             Reset(BlackPlayer, WhitePlayer);
@@ -235,7 +249,9 @@ namespace Othello
             CurrentPlayer = CurrentPlayer == WhitePlayer ? BlackPlayer : WhitePlayer;
             if (GetLegalMove(CurrentPlayer).Count == 0)
             {
+                PlayerPassName = CurrentPlayer.Name;
                 CurrentPlayer = CurrentPlayer == WhitePlayer ? BlackPlayer : WhitePlayer;
+                GetLegalMove(CurrentPlayer);
             }
         }
 
@@ -257,7 +273,9 @@ namespace Othello
 
         public bool IsCreated { get; set; }
 
-        public Brush BackgroundColor
+        public string PlayerPassName { get;set; }
+
+        public SolidColorBrush BackgroundColor
         {
             get => backgroundColor;
             set => backgroundColor = value;
@@ -278,6 +296,11 @@ namespace Othello
                 ChangePlayer();
                 UpdateScore();
             }
+        }
+
+        public bool IsEndGame()
+        {
+            return !CheckPlayerMove(BlackPlayer) && !CheckPlayerMove(WhitePlayer);
         }
 
         public void Reset(Player _blackPlayer, Player _whitePlayer)
@@ -330,6 +353,18 @@ namespace Othello
                 }
             }
             _player.ActualScore = score;
+        }
+
+        public bool CheckPlayerMove(Player _player)
+        {
+            foreach (var pawn in Pawns)
+            {
+                if (IsPlayable(pawn.Number, _player))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public bool IsPlayable(int _index, Player _player, bool _turn = false)
@@ -385,6 +420,21 @@ namespace Othello
                 {
                     break;
                 }
+                //Check if edges
+                if (newIndex % SquareSize == 0)
+                {
+                    if (((newIndex - _direction) + 1) % SquareSize == 0)
+                    {
+                        break;
+                    }
+                }
+                if ((newIndex + 1) % SquareSize == 0)
+                {
+                    if ((newIndex - _direction) % SquareSize == 0)
+                    {
+                        break;
+                    }
+                }
                 var findPawnColor = Pawns.ElementAt(newIndex).GetColor();
                 if (findPawnColor == color && !findOtherColor)
                 {
@@ -410,21 +460,6 @@ namespace Othello
                     if (_turn)
                     {
                         turnPawn.Add(newIndex);
-                    }
-                }
-                //Check if edges
-                if (newIndex % SquareSize == 0)
-                {
-                    if (((newIndex - _direction) + 1) % SquareSize == 0)
-                    {
-                        break;
-                    }
-                }
-                if ((newIndex + 1) % SquareSize == 0)
-                {
-                    if ((newIndex - _direction) % SquareSize == 0)
-                    {
-                        break;
                     }
                 }
                 newIndex += _direction;

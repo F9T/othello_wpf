@@ -28,15 +28,19 @@ namespace Othello.ViewsModels
             switch (_name.ToLower())
             {
                 case "game":
+                    //il y a certainement mieux à faire
+                    if (CurrentViewModel is SettingsViewModel model)
+                    {
+                        BoardViewModel.UpdateBackgroundColor(model.BackgroundColor);
+                    }
                     CurrentViewModel = BoardViewModel;
                     break;
                 case "settings":
-                    //pas fan
                     if (BoardViewModel.IsStarted)
                     {
                         BoardViewModel.StopGame();
                     }
-                    CurrentViewModel = new SettingsViewModel();
+                    CurrentViewModel = new SettingsViewModel(BoardViewModel.WhitePlayer, BoardViewModel.BlackPlayer, BoardViewModel.BackgroundColor);
                     break;
                 case "quit":
                     Application.Current.Shutdown(0);

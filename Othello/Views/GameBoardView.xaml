@@ -4,12 +4,19 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:othello="clr-namespace:Othello"
     xmlns:views="clr-namespace:Othello.Views"
-    xmlns:viewsModels="clr-namespace:Othello.ViewsModels"
-    xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:gif="http://wpfanimatedgif.codeplex.com"
+    xmlns:converters="clr-namespace:Othello.Converters"
     mc:Ignorable="d" Background="Black" 
 >
+    <UserControl.Resources>
+        <!-- Converters -->
+        <converters:PassPlayerToBoolConverter x:Key="PassPlayerToBoolConverter" />
+        <!-- Pass Animation -->
+        <Storyboard x:Key="PassAnimation" AutoReverse="True">
+            <DoubleAnimation Completed="PassAnimation_OnCompleted" Storyboard.TargetProperty="Opacity" BeginTime="0:0:0" From="0" To="1" SpeedRatio="1.5" Duration="0:0:1.5"/>
+        </Storyboard>
+    </UserControl.Resources>
     <Grid IsEnabled="{Binding IsCreated}">
         <Grid.Style>
             <Style TargetType="{x:Type Grid}">
@@ -34,6 +41,22 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="3" Opacity="0" VerticalAlignment="Center" HorizontalAlignment="Center" Panel.ZIndex="11" >
+            <TextBlock.Style>
+                <Style BasedOn="{StaticResource PassPlayerTextBlockStyle}" TargetType="TextBlock">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding PlayerPassName, Converter={StaticResource PassPlayerToBoolConverter}}" Value="True">
+                            <Setter Property="Text" Value="{Binding PlayerPassName, StringFormat='{} The {0} player pass!'}"/>
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard Storyboard="{StaticResource PassAnimation}" />
+                            </DataTrigger.EnterActions>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        <TextBlock Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource WinnerTextBlockStyle}" Visibility="{Binding WinNameVisibility}" Text="{Binding WinnerName, StringFormat='{}The {0} player win !'}" VerticalAlignment="Center" HorizontalAlignment="Center" Panel.ZIndex="11"/>
+        <Image Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="3" gif:ImageBehavior.AnimatedSource="../Images/firework.gif" Visibility="{Binding WinGifVisibility}" Opacity="0.6" gif:ImageBehavior.AnimateInDesignMode="True" gif:ImageBehavior.AutoStart="True" Panel.ZIndex="10" />
         <TextBlock Grid.Column="1" Grid.Row="0" Style="{StaticResource CurrentPlayerInfoStyle}" Text="{Binding CurrentPlayer.Name, StringFormat='{}{0} player to play', TargetNullValue=''}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         <views:PlayerView Player="{Binding BlackPlayer}" Grid.Column="0" Grid.Row="1" />
         <views:PlayerView Player="{Binding WhitePlayer}" Grid.Column="2" Grid.Row="1" />
@@ -65,22 +88,6 @@
                         <Label.Style>
                             <Style TargetType="{x:Type Label}">
                                 <Style.Triggers>
-                                  <!--  <EventTrigger RoutedEvent="Label.MouseLeftButtonUp">
-                                        <BeginStoryboard>
-                                            <Storyboard BeginTime="00:00:00.000" Duration="00:00:1.000">
-                                                <DoubleAnimation
-                                                                 Storyboard.TargetProperty="Opacity" 
-                                                                 From="1" To="0" Duration="00:00:1.000" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                        <BeginStoryboard>
-                                            <Storyboard BeginTime="00:00:0.000" Duration="00:00:1.000">
-                                                <DoubleAnimation
-                                                    Storyboard.TargetProperty="Opacity" 
-                                                    From="0" To="1" Duration="00:00:1.000" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </EventTrigger>-->
                                     <MultiDataTrigger>
                                         <MultiDataTrigger.Conditions>
                                             <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsMouseOver}" Value="True"/>
@@ -103,3 +110,4 @@
         </ItemsControl>
     </Grid>
 </UserControl>
+
