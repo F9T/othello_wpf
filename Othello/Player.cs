@@ -21,11 +21,11 @@ namespace Othello
                 Color = _color;
                 if (Color == PawnColor.Black)
                 {
-                    ImageSource = new FileInfo("../Images/black_pawn.png").FullName;
+                    ImageSource = "../Images/black_pawn.png";
                 }
                 else if (Color == PawnColor.White)
                 {
-                    ImageSource = new FileInfo("../Images/white_pawn.png").FullName;
+                    ImageSource = "../Images/white_pawn.png";
                 }
             }
             else
